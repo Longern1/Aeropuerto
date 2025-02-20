@@ -7,16 +7,11 @@ from flask import send_from_directory
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-
+from dotenv import load_dotenv
+# Cargar variables de entorno
+load_dotenv()
 app = Flask(__name__)
 
-
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'Aeropuerto'  
-}
 
 # Configuración de la base de datos en Render
 DB_USER = "longern_user"
