@@ -139,7 +139,7 @@ def login():
         else:
             flash("Correo o contraseña incorrectos", "error")  
 
-    return render_template("login.html") 
+    return render_template("Login.html") 
 
     
 @app.route('/admin_dashboard.html')
