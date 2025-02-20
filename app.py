@@ -102,8 +102,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-db.session.add(nuevo_usuario)
-db.session.commit()
+
 
 @app.route('/')
 def index():
