@@ -101,14 +101,6 @@ UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-nuevo_usuario = Usuario(
-    id=44,  # Si usas autoincrement, puedes omitir este campo.
-    nombre='carlos maestre',
-    correo='carlosm@empresa.com',
-    contraseña='scrypt:32768:8:1$2Yy1fjr1WbKIOD1L$91d68c4f58f820a2c744005d0f83d80abf6765ae8a24c9c25a0443e3bb8c5c44199075a6cc18bb5cf96d540f6c34dc3473d591482c4702ba8932330db667900c',
-    rol='administrativo',
-    fecha_creacion=datetime.strptime('2025-02-10 00:43:38', '%Y-%m-%d %H:%M:%S')
-)
 
 db.session.add(nuevo_usuario)
 db.session.commit()
