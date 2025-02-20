@@ -1170,6 +1170,7 @@ def create_vehicle2():
 
 
 
+app = Flask(__name__, template_folder="templates")
 
 
 
@@ -1179,5 +1180,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.secret_key = 'your_secret_key'  # Asegúrate de tener una clave secreta para la sesión
     app.run(debug=True)
