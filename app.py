@@ -7,100 +7,22 @@ from flask import send_from_directory
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-from dotenv import load_dotenv
-# Cargar variables de entorno
-load_dotenv()
+
 app = Flask(__name__)
 
 
-# Configuración de la base de datos en Render
-DB_USER = "longern_user"
-DB_PASSWORD = "fcW5rRgFTfKw5ve3Qe5ZyrJIFJpRCE2Q"  # Copia la contraseña de la imagen
-DB_HOST = "dpg-cum1hb5umphs738ba2n0-a"
-DB_NAME = "longern"
-DB_PORT = "5432"
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'Aeropuerto'  
+}
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-
-
-
-from datetime import datetime, date, time
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.mysql import ENUM, DECIMAL
-
-db = SQLAlchemy()
-
-# Modelo para la tabla peritaje
-class Peritaje(db.Model):
-    __tablename__ = 'peritaje'
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    placa = db.Column(db.String(20))
-    fotos = db.Column(db.String(255))
-    fecha_peritaje = db.Column(db.DateTime)
-
-    def __repr__(self):
-        return f"<Peritaje {self.id} - {self.placa}>"
-
-# Modelo para la tabla usuarios
-class Usuario(db.Model):
-    __tablename__ = 'usuarios'
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    correo = db.Column(db.String(100), unique=True, nullable=False)
-    contraseña = db.Column(db.String(255), nullable=False)
-    rol = db.Column(ENUM('administrativo', 'transportador'), nullable=False)
-    fecha_creacion = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    # Relaciones inversas
-    vehiculos = db.relationship('Vehiculo', back_populates='usuario', foreign_keys='Vehiculo.usuario_id', lazy=True)
-    vehiculos_entrega = db.relationship('Vehiculo', back_populates='usuario_entrega_obj', foreign_keys='Vehiculo.usuario_entrega', lazy=True)
-    vehiculos_recogida = db.relationship('Vehiculo', back_populates='usuario_recogida_obj', foreign_keys='Vehiculo.usuario_recogida', lazy=True)
-
-    def __repr__(self):
-        return f"<Usuario {self.id} - {self.nombre}>"
-
-# Modelo para la tabla vehiculos
-class Vehiculo(db.Model):
-    __tablename__ = 'vehiculos'
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    modelo = db.Column(db.String(255), nullable=False)
-    placa = db.Column(db.String(50), unique=True, nullable=False)
-    ubicacion = db.Column(db.String(255), default='Desconocida')
-    estado = db.Column(ENUM('Recogida','Entrega','En entrega','En recogida','Recogido','Entregado'), nullable=False)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    fecha_recogida = db.Column(db.Date, nullable=False)
-    hora_recogida = db.Column(db.Time)
-    fecha_entrega = db.Column(db.Date)
-    hora_entrega = db.Column(db.Time)
-    cliente_nombre = db.Column(db.String(255), nullable=False)
-    cliente_telefono = db.Column(db.String(15), nullable=False)
-    cliente_correo = db.Column(db.String(255), default='N/A')
-    descripcion = db.Column(db.Text)
-    usuario_entrega = db.Column(db.Integer, db.ForeignKey('usuarios.id', ondelete="SET NULL", onupdate="CASCADE"))
-    usuario_recogida = db.Column(db.Integer, db.ForeignKey('usuarios.id', ondelete="SET NULL", onupdate="CASCADE"))
-    comentarios = db.Column(db.Text)
-    precio = db.Column(DECIMAL(10, 2), default=0.00)
-    numero_vuelo = db.Column(db.String(20))
-    numero_reserva = db.Column(db.String(255))
-    
-    # Relaciones
-    usuario = db.relationship('Usuario', back_populates='vehiculos', foreign_keys=[usuario_id])
-    usuario_entrega_obj = db.relationship('Usuario', back_populates='vehiculos_entrega', foreign_keys=[usuario_entrega])
-    usuario_recogida_obj = db.relationship('Usuario', back_populates='vehiculos_recogida', foreign_keys=[usuario_recogida])
-
-    def __repr__(self):
-        return f"<Vehiculo {self.id} - {self.placa}>"
 
 
 UPLOAD_FOLDER = 'static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 
 
@@ -139,7 +61,7 @@ def login():
         else:
             flash("Correo o contraseña incorrectos", "error")  
 
-    return render_template("Login.html") 
+    return render_template("login.html") 
 
     
 @app.route('/admin_dashboard.html')
@@ -1170,7 +1092,6 @@ def create_vehicle2():
 
 
 
-app = Flask(__name__, template_folder="templates")
 
 
 
@@ -1180,4 +1101,5 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    app.secret_key = 'your_secret_key'  # Asegúrate de tener una clave secreta para la sesión
     app.run(debug=True)
