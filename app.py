@@ -765,7 +765,7 @@ def peritajes():
     cursor.close()
     conn.close()
 
-    return render_template('Peritaje.html', 
+    return render_template('peritaje.html', 
                            name=session.get('name', 'Administrativo'),
                            vehiculos_peritados=vehiculos_peritados)
 
