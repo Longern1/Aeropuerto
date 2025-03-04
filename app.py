@@ -28,7 +28,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def index():
-    return render_template('Login.html')
+    return render_template('login.html')
 
 
 
@@ -613,7 +613,7 @@ def tus_vehiculos():
    
     print(vehicles)
 
-    return render_template('Tus_Vehiculos.html', vehicles=vehicles, name=session.get('name', 'Transportador'))
+    return render_template('tus_Vehiculos.html', vehicles=vehicles, name=session.get('name', 'Transportador'))
 
 
 
